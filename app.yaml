@@ -1,0 +1,71 @@
+cat > app.yaml << 'EOF'
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample-app
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  namespace: sample-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: sample-app
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+---
+# ConfigMap for custom HTML
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: sample-app
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Test App -01</title>
+    </head>
+    <body>
+      <h1>Test App Working fine!</h1>
+      <p>This application is delpoyed for testing 01</p>
+    </body>
+    </html>
+EOF
