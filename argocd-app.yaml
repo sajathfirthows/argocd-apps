@@ -1,20 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sample-app
+  name: multi-service-app
   namespace: argocd
 spec:
   project: default
+
   source:
-    repoURL: https://github.com/sajathfirthows/argocd-apps.git
-    targetRevision: HEAD
-    path: .
+    repoURL: https://github.com/sajathfirthows/sajath-devops-prac.git  # <-- your repo
+    targetRevision: main
+    path: App/argocd-apps/kustomize/overlays/production
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: sample-app
+    namespace: multi-service-app
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
+
