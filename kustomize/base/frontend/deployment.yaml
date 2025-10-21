@@ -2,8 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  labels:
-    app: frontend
+  namespace: multi-service-app
 spec:
   replicas: 1
   selector:
@@ -15,8 +14,15 @@ spec:
         app: frontend
     spec:
       containers:
-        - name: frontend
-          image: nginx
-          ports:
-            - containerPort: 80
+      - name: frontend
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html
+        configMap:
+          name: frontend-html
 
