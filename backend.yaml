@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: kennethreitz/httpbin
+        image: nginx:alpine
         ports:
         - containerPort: 80
         resources:
